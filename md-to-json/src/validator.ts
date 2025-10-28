@@ -1,27 +1,15 @@
-// ============================================
-// src/validator.ts
-// ============================================
+import * as fs from "fs";
 import type { ParsedMarkdown } from "./types";
 
 export class Validator {
-  /**
-   * Valida se arquivo existe (simulado - no Node usaria fs.existsSync)
-   */
   static fileExists(path: string): boolean {
-    // No ambiente real: return fs.existsSync(path);
-    return true; // Placeholder
+    return fs.existsSync(path);
   }
 
-  /**
-   * Valida se é arquivo .md
-   */
   static isMarkdownFile(path: string): boolean {
     return path.endsWith(".md");
   }
 
-  /**
-   * Valida conteúdo parsed
-   */
   static validateParsed(parsed: ParsedMarkdown): {
     valid: boolean;
     errors: string[];

@@ -39,22 +39,32 @@ md-to-json/
 ### Converter um arquivo
 
 ```bash
-npm run convert ./examples/input/exemplo.md
+# Modo full (padrão) - Inclui frontmatter + seções + conteúdo completo
+npm run convert -- ./examples/input/exemplo.md
+
+# Modo sections - Apenas frontmatter + seções separadas
+npm run convert -- ./examples/input/exemplo.md --mode=sections
+
+# Modo raw - Apenas frontmatter + conteúdo completo
+npm run convert -- ./examples/input/exemplo.md --mode=raw
 ```
 
-Saída:
+Saída (modo full):
 
 ```
 📖 Lendo: ./examples/input/exemplo.md
-⚙️  Convertendo...
+⚙️  Convertendo (modo: full)...
 ✅ Conversão concluída!
 📄 Arquivo gerado: ./examples/input/exemplo.json
 
 📊 Estatísticas:
+   - Modo: full
    - Campos frontmatter: 4
    - Seções encontradas: 5
    - Tamanho conteúdo: 623 chars
 ```
+
+Nota: O `--` após o comando `npm run convert` é necessário para passar os argumentos corretamente para o script.
 
 ### Formato de Entrada (MD)
 
@@ -81,6 +91,10 @@ Mais texto...
 
 ### Formato de Saída (JSON)
 
+Existem três modos de saída disponíveis:
+
+#### Modo Full (padrão)
+
 ```json
 {
   "frontmatter": {
@@ -97,6 +111,36 @@ Mais texto...
 }
 ```
 
+#### Modo Sections
+
+```json
+{
+  "frontmatter": {
+    "numero": 1,
+    "tipo": "motivacao",
+    "titulo": "O Pioneiro"
+  },
+  "sections": {
+    "Significado Geral": "Texto descritivo...",
+    "Características Positivas": ["Item 1", "Item 2"],
+    "Orientações": "Mais texto..."
+  }
+}
+```
+
+#### Modo Raw
+
+```json
+{
+  "frontmatter": {
+    "numero": 1,
+    "tipo": "motivacao",
+    "titulo": "O Pioneiro"
+  },
+  "content": "# Significado Geral\n\nTexto descritivo...\n\n## Características Positivas\n\n- Item 1\n- Item 2\n\n## Orientações\n\nMais texto..."
+}
+```
+
 ## ✨ Features (Fase 1.1)
 
 - ✅ Extrai frontmatter YAML
@@ -105,6 +149,7 @@ Mais texto...
 - ✅ Tipos detectados (number, boolean, string)
 - ✅ Validações básicas
 - ✅ Output no mesmo diretório
+- ✅ Múltiplos modos de saída (full, sections, raw)
 
 ## 🔮 Roadmap
 
