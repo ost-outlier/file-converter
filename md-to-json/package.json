@@ -18,10 +18,12 @@
   "author": "ost.dev",
   "license": "MIT",
   "devDependencies": {
-    "@types/node": "^20.0.0",
-    "typescript": "^5.0.0",
-    "tsx": "^4.7.0",
+    "@types/glob": "^8.1.0",
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.19.24",
+    "glob": "^9.3.5",
     "jest": "^29.0.0",
-    "@types/jest": "^29.0.0"
+    "tsx": "^4.7.0",
+    "typescript": "^5.0.0"
   }
 }

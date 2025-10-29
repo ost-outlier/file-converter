@@ -2,21 +2,57 @@
 // src/index.ts - CLI
 // ============================================
 import * as fs from "fs";
+import * as path from "path";
 import { MarkdownParser } from "./parser";
 import { Validator } from "./validator";
+import { ConfigLoader } from "./config";
+import { OutputManager } from "./output";
+import { ReportManager } from "./report";
+import { BatchProcessor } from "./batch";
 import type { OutputMode } from "./types";
 
-function main() {
+async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0) {
+  // Verifica modo de operação
+  const configArg = args.find((arg) => arg.startsWith("--config="));
+
+  if (configArg) {
+    // Modo config - múltiplos arquivos
+    const configPath = path.resolve(configArg.split("=")[1]);
+
+    if (!fs.existsSync(configPath)) {
+      console.error(`❌ Arquivo de configuração não encontrado: ${configPath}`);
+      process.exit(1);
+    }
+
+    try {
+      const config = ConfigLoader.load(configPath);
+      const outputManager = new OutputManager(config);
+      const reportManager = new ReportManager(config);
+      const batchProcessor = new BatchProcessor(
+        config,
+        outputManager,
+        reportManager
+      );
+
+      await batchProcessor.process();
+    } catch (error) {
+      console.error(`❌ Erro ao processar config:`, error);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (args.length === 0 || (args.length === 1 && args[0] === "--help")) {
     console.log(`
 ╔════════════════════════════════════════╗
-║     MD → JSON Converter v1.1           ║
+║     MD → JSON Converter v1.2           ║
 ╚════════════════════════════════════════╝
 
 Uso:
-  npm run convert -- <arquivo.md> [--mode=MODO]
+  npm run convert <arquivo.md> [--mode=MODO]
+  npm run convert --config=<config.json>
 
 Modos disponíveis:
   --mode=full      (padrão) Frontmatter + seções + conteúdo completo
@@ -24,9 +60,12 @@ Modos disponíveis:
   --mode=raw       Apenas frontmatter + conteúdo completo
 
 Exemplos:
+  # Arquivo único
   npm run convert -- ./examples/input/exemplo.md
   npm run convert -- ./examples/input/exemplo.md --mode=sections
-  npm run convert -- ./examples/input/exemplo.md --mode=raw
+
+  # Múltiplos arquivos via config
+  npm run convert -- --config=./config.json
 
 Nota: O -- é necessário para passar os argumentos corretamente para o script
     `);
@@ -126,4 +165,8 @@ Nota: O -- é necessário para passar os argumentos corretamente para o script
   }
 }
 
-main();
+// Auto-executa a função main
+main().catch((error) => {
+  console.error("❌ Erro fatal:", error);
+  process.exit(1);
+});

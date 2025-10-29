@@ -5,6 +5,7 @@ Pronto! Agora você tem 3 modos de saída. Veja como usar:
 ## 📝 Como usar os 3 modos
 
 ### **1. Modo FULL (padrão) - Tudo junto**
+
 ```bash
 npm run convert ./examples/input/exemplo.md
 # ou explicitamente:
@@ -12,6 +13,7 @@ npm run convert ./examples/input/exemplo.md --mode=full
 ```
 
 **Saída JSON:**
+
 ```json
 {
   "frontmatter": {
@@ -29,11 +31,13 @@ npm run convert ./examples/input/exemplo.md --mode=full
 ---
 
 ### **2. Modo SECTIONS - Só seções separadas**
+
 ```bash
 npm run convert ./examples/input/exemplo.md --mode=sections
 ```
 
 **Saída JSON:**
+
 ```json
 {
   "frontmatter": {
@@ -46,16 +50,19 @@ npm run convert ./examples/input/exemplo.md --mode=sections
   }
 }
 ```
+
 ✅ **Sem duplicação** - não tem `rawContent`
 
 ---
 
 ### **3. Modo RAW - Só conteúdo completo**
+
 ```bash
-npm run convert ./examples/input/exemplo.md --mode=raw
+npm run convert -- ./examples/input/exemplo.md --mode=raw
 ```
 
 **Saída JSON:**
+
 ```json
 {
   "frontmatter": {
@@ -65,17 +72,18 @@ npm run convert ./examples/input/exemplo.md --mode=raw
   "content": "# Significado Geral\nTexto...\n\n## Características\n- Item 1\n- Item 2"
 }
 ```
+
 ✅ **Sem duplicação** - não tem `sections`
 
 ---
 
 ## 🎯 Quando usar cada modo?
 
-| Modo | Usar quando... |
-|------|---------------|
-| **full** | Quer flexibilidade total (usar seções OU texto completo depois) |
+| Modo         | Usar quando...                                                      |
+| ------------ | ------------------------------------------------------------------- |
+| **full**     | Quer flexibilidade total (usar seções OU texto completo depois)     |
 | **sections** | Vai processar cada seção individualmente (mapas numerológicos, FAQ) |
-| **raw** | Quer o markdown original preservado (blog posts, documentação) |
+| **raw**      | Quer o markdown original preservado (blog posts, documentação)      |
 
 ---
 

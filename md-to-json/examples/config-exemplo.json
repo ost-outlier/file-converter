@@ -1,0 +1,20 @@
+{
+  "input": {
+    "patterns": ["./examples/input/*.md"],
+    "mode": "raw"
+  },
+  "output": {
+    "directory": "./examples/output",
+    "consolidate": {
+      "enabled": true,
+      "filename": "consolidated.json",
+      "groupBy": "tipo"
+    },
+    "keepIndividualFiles": false
+  },
+  "report": {
+    "enabled": true,
+    "filename": "report.json",
+    "includeWarnings": true
+  }
+}

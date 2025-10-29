@@ -34,7 +34,9 @@ md-to-json/
 └── README.md
 ```
 
-## 🎯 Uso (Fase 1.1 - Arquivo Único)
+## 🎯 Uso (Fase 1.2)
+
+> 📚 [Consulte o guia completo de configuração](./docs/guia-configuracao.md) para ver todas as opções disponíveis.
 
 ### Converter um arquivo
 
@@ -141,7 +143,7 @@ Existem três modos de saída disponíveis:
 }
 ```
 
-## ✨ Features (Fase 1.1)
+## ✨ Features (Fase 1.2)
 
 - ✅ Extrai frontmatter YAML
 - ✅ Separa seções por headers (# ##)
@@ -153,12 +155,7 @@ Existem três modos de saída disponíveis:
 
 ## 🔮 Roadmap
 
-### Fase 1.2 (Próxima)
-
-- [ ] Config.json para múltiplos arquivos
-- [ ] Consolidação em JSON único
-- [ ] Suporte a globs (\*.md)
-- [ ] Relatório de conversão
+### Fase 1.3 (Próxima)
 
 ### Futuro
 
