@@ -12,7 +12,12 @@ file-converter/
 │   │   │   └── index.ts   # Classes e interfaces base
 │   │   └── package.json
 │   │
-│   └── md-to-json/        # Conversor de Markdown
+│   ├── md-to-json/        # Conversor de Markdown
+│   │   ├── src/
+│   │   ├── examples/
+│   │   └── package.json
+│   │
+│   └── excel-to/          # Conversor de Excel
 │       ├── src/
 │       ├── examples/
 │       └── package.json
@@ -38,7 +43,7 @@ npm run build
 
 ### @file-converter/core
 
-Pacote base com interfaces e classes compartilhadas entre os conversores.
+Pacote base com interfaces e classes compartilhadas entre os conversores. Fornece a infraestrutura comum para todos os conversores do projeto.
 
 ### @file-converter/md-to-json
 
@@ -55,6 +60,21 @@ npm run convert -- ./examples/input/exemplo.md --mode=sections
 npm run convert -- --config=./examples/config-exemplo.json
 ```
 
+### @file-converter/excel-to
+
+Conversor de Excel para vários formatos (JSON, CSV, Markdown). [Documentação detalhada](./packages/excel-to/README.md)
+
+```bash
+# Uso (dentro da pasta excel-to)
+npm run convert -- ./input/planilha.xlsx --format=json
+
+# Com configurações específicas
+npm run convert -- ./input/planilha.xlsx --format=md --sheet=Sheet1
+
+# Processamento em lote via config
+npm run convert -- --config=./config.json
+```
+
 ## ✨ Features
 
 - ✅ Arquitetura modular e extensível
@@ -62,6 +82,10 @@ npm run convert -- --config=./examples/config-exemplo.json
 - ✅ Configuração flexível
 - ✅ Processamento em lote
 - ✅ Relatórios de conversão
+- ✅ Validação de entrada/saída
+- ✅ Suporte a múltiplos formatos
+- ✅ Configuração via JSON
+- ✅ CLI intuitiva
 
 ## 🧩 Criando Novos Conversores
 
@@ -95,25 +119,34 @@ export class NewProcessor extends BaseProcessor<NewConfig> {
 
 ## 🔮 Roadmap
 
-### Fase 1 (Atual)
+### Fase 1 (Concluída)
 
 - ✅ Estrutura de monorepo
 - ✅ Pacote core com interfaces base
 - ✅ Conversor MD → JSON
+- ✅ Documentação inicial
 
-### Fase 2 (Planejado)
+### Fase 2 (Atual)
 
-- [ ] Conversor Excel → JSON
-- [ ] Conversor JSON → Excel
+- ✅ Conversor Excel → múltiplos formatos
 - [ ] CLI unificada
 - [ ] Documentação da API
+- [ ] Testes E2E
+
+### Fase 3 (Planejado)
+
+- [ ] Interface web
+- [ ] API REST
+- [ ] Plugins para editores (VS Code, Obsidian)
+- [ ] Integração contínua (CI/CD)
 
 ### Futuro
 
 - Conversores HTML
 - Conversores PDF
-- Interface web
-- Plugins para editores (VS Code, Obsidian)
+- Suporte a templates
+- Processamento em nuvem
+- Marketplace de plugins
 
 ## 🧪 Testes
 

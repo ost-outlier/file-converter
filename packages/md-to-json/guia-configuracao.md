@@ -1,8 +1,8 @@
 # Guia Completo de Configuração e Uso
 
-Este guia explica em detalhes todas as possibilidades de configuração e uso do conversor MD → JSON.
+Este guia explica em detalhes todas as possibilidades de configuração e uso do conversor MD → JSON. Use este documento como referência completa para todas as opções e recursos disponíveis no conversor.
 
-## Índice
+## 🔍 Índice
 
 - [Modos de Operação](#modos-de-operação)
 - [Arquivo Único](#arquivo-único)
@@ -123,18 +123,23 @@ O arquivo de configuração (config.json) permite personalizar completamente o p
 }
 ```
 
-### Detalhamento das Opções
+### 🔧 Detalhamento das Opções
 
 #### 1. Input
 
 - `patterns`: Array de padrões glob
   - Suporta todos os padrões glob padrão
+  - Aceita também caminhos de diretório absoluto ou relativo (ex.: `"./input"` ou `"C:/meus/mds"`).
+  - Diretórios são automaticamente expandidos para busca recursiva (`"<diretório>/**/*.md"`).
+  - Normaliza caminhos Windows e Unix (pode usar \ ou /)
   - Use `!` no início para excluir padrões
   - Exemplos:
     - `"*.md"` - Todos os .md no diretório atual
     - `"**/*.md"` - Todos os .md em qualquer subdiretório
     - `"./posts/*.md"` - Apenas .md na pasta posts
+    - `"./input"` - Pasta inteira (expande para `./input/**/*.md`)
     - `"!./private/**"` - Exclui tudo na pasta private
+    - `["./blog", "./docs"]` - Múltiplos diretórios
 - `mode`: Modo de conversão
   - `"full"` - (padrão) Frontmatter + seções + conteúdo
   - `"sections"` - Apenas frontmatter + seções
@@ -241,21 +246,35 @@ O relatório gerado inclui:
 }
 ```
 
-## Dicas e Boas Práticas
+## 💡 Dicas e Boas Práticas
 
 1. **Padrões Glob**
 
    - Use `**/*.md` para busca recursiva
    - Use padrões de exclusão para ignorar pastas específicas
    - Seja específico para melhor performance
+   - Prefira passar diretórios completos quando quiser processar todas as subpastas
+   - Use arrays de patterns para organizar melhor as inclusões/exclusões
 
 2. **Consolidação**
 
    - Agrupe por campos relevantes do frontmatter
    - Use nomes descritivos para os arquivos
    - Considere desabilitar arquivos individuais se não necessários
+   - Planeje a estrutura do groupBy considerando a análise posterior
+   - Verifique se todos os arquivos têm o campo usado no groupBy
 
 3. **Relatórios**
+
    - Sempre habilite para processos em lote
    - Verifique warnings mesmo em casos de sucesso
    - Use para monitorar qualidade dos arquivos markdown
+   - Implemente verificações regulares baseadas no relatório
+   - Considere adicionar o relatório ao controle de qualidade do projeto
+
+4. **Performance**
+   - Organize arquivos em diretórios lógicos para otimizar a busca
+   - Use padrões específicos em vez de buscas muito amplas
+   - Considere dividir processamentos muito grandes em lotes menores
+   - Mantenha os arquivos markdown bem estruturados
+   - Evite patterns que se sobrepõem desnecessariamente

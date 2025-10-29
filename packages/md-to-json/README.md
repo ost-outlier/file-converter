@@ -54,36 +54,15 @@ npm run convert -- ./examples/input/exemplo.md --mode=raw
 
 ### Processamento em Lote
 
-1. Crie um arquivo de configuração (ex: `config.json`):
-
-```json
-{
-  "input": {
-    "patterns": ["./input/*.md"],
-    "mode": "raw"
-  },
-  "output": {
-    "directory": "./output",
-    "consolidate": {
-      "enabled": true,
-      "filename": "consolidated.json",
-      "groupBy": "tipo"
-    },
-    "keepIndividualFiles": false
-  },
-  "report": {
-    "enabled": true,
-    "filename": "report.json",
-    "includeWarnings": true
-  }
-}
-```
-
-2. Execute:
+Para processar múltiplos arquivos, use um arquivo de configuração:
 
 ```bash
 npm run convert -- --config=./config.json
 ```
+
+Para detalhes completos sobre configuração e todas as opções disponíveis, consulte o [Guia de Configuração](./guia-configuracao.md).
+
+````
 
 ## 📄 Formato dos Arquivos
 
@@ -108,7 +87,7 @@ Texto descritivo...
 ## Orientações
 
 Mais texto...
-```
+````
 
 ### Saída (JSON)
 
