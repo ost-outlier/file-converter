@@ -1,7 +1,11 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import { pathToFileURL } from "url";
-import type { VideoToMarkdownOptions } from "./types";
+import type {
+  VideoToMarkdownOptions,
+  VideoToMarkdownTemplate,
+} from "./types";
+import { templateConfig } from "./template";
 
 const VIDEO_EXTENSIONS = new Set([
   ".mp4",
@@ -29,11 +33,8 @@ interface ProcessStats {
 async function main() {
   const args = process.argv.slice(2);
 
-  if (args.length === 0 || args.includes("--help") || args.includes("-h")) {
+  if (args.includes("--help") || args.includes("-h")) {
     printHelp();
-    if (args.length === 0) {
-      process.exit(1);
-    }
     process.exit(0);
   }
 
@@ -47,6 +48,8 @@ async function main() {
     return;
   }
 
+  parsed = applyTemplateDefaults(parsed, templateConfig);
+
   if (!parsed.inputDir) {
     console.error("[erro] informe o caminho da pasta com os videos.");
     process.exit(1);
@@ -57,7 +60,7 @@ async function main() {
     ...parsed.options,
     outputDir: parsed.options.outputDir
       ? path.resolve(parsed.options.outputDir)
-      : undefined,
+      : parsed.options.outputDir,
   };
 
   try {
@@ -87,12 +90,13 @@ Opcoes:
                  Quando omitido, a nota e criada na mesma pasta do video.
   --force        Sobrescreve notas existentes com o mesmo nome.
   --help, -h     Mostra esta ajuda.
+                 Quando executado sem argumentos o programa utiliza as configuracoes definidas em template.ts.
 `);
 }
 
 function parseArgs(args: string[]): CliParseResult {
   let inputDir: string | undefined;
-  const options: VideoToMarkdownOptions = { force: false };
+  const options: VideoToMarkdownOptions = {};
 
   for (let index = 0; index < args.length; index += 1) {
     const arg = args[index];
@@ -130,6 +134,27 @@ function parseArgs(args: string[]): CliParseResult {
   }
 
   return { inputDir, options };
+}
+
+function applyTemplateDefaults(
+  parsed: CliParseResult,
+  template: VideoToMarkdownTemplate
+): CliParseResult {
+  if (!parsed.inputDir && !template.input) {
+    return parsed;
+  }
+
+  const mergedOptions: VideoToMarkdownOptions = {
+    ...parsed.options,
+    outputDir: parsed.options.outputDir ?? template.output,
+    force: parsed.options.force ?? template.force ?? false,
+    properties: parsed.options.properties ?? template.properties,
+  };
+
+  return {
+    inputDir: parsed.inputDir ?? template.input,
+    options: mergedOptions,
+  };
 }
 
 async function convertDirectory(
@@ -216,7 +241,11 @@ async function createNote(
     return "skipped";
   }
 
-  const noteContent = buildNoteContent(videoName, videoPath);
+  const noteContent = buildNoteContent(
+    videoName,
+    videoPath,
+    options.properties
+  );
   await fs.writeFile(notePath, noteContent, "utf8");
 
   if (exists) {
@@ -237,12 +266,34 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
-function buildNoteContent(title: string, videoPath: string): string {
+function buildNoteContent(
+  title: string,
+  videoPath: string,
+  properties?: string
+): string {
   const videoUrl = pathToFileURL(videoPath).href;
-  return `# ${title}
+  const baseContent = `# ${title}
 <video src="${videoUrl}" controls width="100%" height="auto">
 </video>
 `;
+
+  if (!properties) {
+    return baseContent;
+  }
+
+  const formattedProperties = ensureTrailingNewline(
+    applyPropertiesTemplate(properties, videoUrl)
+  );
+
+  return `${formattedProperties}${baseContent}`;
+}
+
+function applyPropertiesTemplate(template: string, videoUrl: string): string {
+  return template.replaceAll("${videoUrl}", videoUrl);
+}
+
+function ensureTrailingNewline(value: string): string {
+  return value.endsWith("\n") ? value : `${value}\n`;
 }
 
 function printSummary(
