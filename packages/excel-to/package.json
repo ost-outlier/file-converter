@@ -1,7 +1,7 @@
 {
-  "name": "@file-converter/md-to-json",
-  "version": "1.1.0",
-  "description": "Markdown to JSON converter",
+  "name": "@file-converter/excel-to",
+  "version": "1.0.0",
+  "description": "Excel converter with support for multiple output formats",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -11,25 +11,23 @@
     "test": "jest"
   },
   "keywords": [
-    "markdown",
-    "json",
+    "excel",
     "converter",
-    "obsidian"
+    "markdown",
+    "json"
   ],
   "author": "ost.dev",
   "license": "MIT",
   "dependencies": {
     "@file-converter/core": "^1.0.0",
-    "@file-converter/excel-to": "^1.0.0",
-    "glob": "^9.3.5"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
     "@types/jest": "^29.0.0",
     "@types/node": "^20.19.24",
     "jest": "^29.0.0",
-    "rimraf": "^5.0.0",
     "tsx": "^4.7.0",
-    "typescript": "^5.0.0"
+    "typescript": "^5.0.0",
+    "rimraf": "^5.0.0"
   }
 }

@@ -1,6 +1,6 @@
 # Explicação 
 - Mapea os blocos de códigos dentro da nota e cria os arquivos com nome e extensão correspondente (ex. `typescript`,.`javascript` `json`, etc)
-- Teste: arquivos [[prompts-fase-1]]
+- Teste: arquivos [[OKprompts-fase-1]]
 - Estrutura ideal:
 - nome do arquivo (ex: `letra-numero.converter.test.ts`) seguido de bloco de código:
 

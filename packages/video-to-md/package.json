@@ -1,33 +1,27 @@
 {
-  "name": "@file-converter/md-to-json",
-  "version": "1.1.0",
-  "description": "Markdown to JSON converter",
+  "name": "@file-converter/video-to-md",
+  "version": "1.0.0",
+  "description": "Gera notas Markdown com vídeos incorporados a partir de arquivos de vídeo",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "convert": "tsx src/index.ts",
-    "clean": "rimraf dist",
-    "test": "jest"
+    "clean": "rimraf dist"
   },
   "keywords": [
+    "video",
     "markdown",
-    "json",
-    "converter",
+    "notes",
     "obsidian"
   ],
   "author": "ost.dev",
   "license": "MIT",
   "dependencies": {
-    "@file-converter/core": "^1.0.0",
-    "@file-converter/excel-to": "^1.0.0",
-    "glob": "^9.3.5"
+    "@file-converter/core": "^1.0.0"
   },
   "devDependencies": {
-    "@types/glob": "^8.1.0",
-    "@types/jest": "^29.0.0",
     "@types/node": "^20.19.24",
-    "jest": "^29.0.0",
     "rimraf": "^5.0.0",
     "tsx": "^4.7.0",
     "typescript": "^5.0.0"

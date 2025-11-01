@@ -1,0 +1,23 @@
+{
+  "input": {
+    "patterns": ["./input/*.xlsx"],
+    "columns": ["titulo", "descricao"],
+    "startRow": 2
+  },
+  "output": {
+    "directory": "./output",
+    "format": "markdown",
+    "template": "---\ntitle: ${titulo}\n---\n\n# ${titulo}\n\n${descricao}",
+    "filenamePattern": "${titulo}",
+    "consolidate": {
+      "enabled": false,
+      "filename": "consolidated.md"
+    },
+    "keepIndividualFiles": true
+  },
+  "report": {
+    "enabled": true,
+    "filename": "conversion-report.json",
+    "includeWarnings": true
+  }
+}

@@ -167,18 +167,6 @@ npm test
 4. Push para a branch (`git push origin feature/nova-feature`)
 5. Abra um Pull Request
 
-### @file-converter/video-to-md
-
-Gera notas Markdown com `<video>` para todos os arquivos de video encontrados em uma pasta local.
-
-```bash
-# Uso (dentro da pasta video-to-md)
-npm run convert -- "E:\Fundamentos de Arquitetura de Software"
-
-# Escolhendo outra pasta de saida e sobrescrevendo notas existentes
-npm run convert -- "E:\Fundamentos de Arquitetura de Software" --output="D:\Notas" --force
-```
-
 ## 📄 Licença
 
 MIT

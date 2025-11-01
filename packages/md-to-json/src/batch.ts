@@ -24,7 +24,23 @@ export class BatchProcessor extends BaseProcessor<MarkdownConfig> {
 
     // Processa todos os padrões de arquivos
     for (const pattern of this.config.input.patterns) {
-      const matches = glob.sync(pattern);
+      // Se o pattern for um diretório existente, converte para um glob que busca por .md recursivamente
+      let matches: string[] = [];
+      try {
+        // Normalize slashes for glob (glob works better with forward slashes)
+        const normalizedPattern = pattern.replace(/\\/g, "/");
+        if (fs.existsSync(pattern) && fs.statSync(pattern).isDirectory()) {
+          const dirPattern = path
+            .join(pattern, "**", "*.md")
+            .replace(/\\/g, "/");
+          matches = glob.sync(dirPattern, { nodir: true });
+        } else {
+          matches = glob.sync(normalizedPattern, { nodir: true });
+        }
+      } catch (err) {
+        // Em caso de erro ao checar o sistema de arquivos, ainda tentamos usar o pattern como glob
+        matches = glob.sync(pattern.replace(/\\/g, "/"), { nodir: true });
+      }
 
       for (const inputPath of matches) {
         if (!Validator.isMarkdownFile(inputPath)) continue;
