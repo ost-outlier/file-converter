@@ -1,0 +1,20 @@
+{
+  "name": "@file-converter/block-html-to",
+  "version": "1.0.0",
+  "description": "Extrai o conteúdo de <textarea> de um HTML e grava em arquivos .txt sequenciais",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "convert": "tsx src/index.ts",
+    "clean": "rimraf dist"
+  },
+  "author": "ost.dev",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.19.24",
+    "rimraf": "^5.0.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.0.0"
+  }
+}

@@ -1,21 +1,20 @@
 import type { VideoToMarkdownTemplate } from "./types";
 
 export const templateConfig: VideoToMarkdownTemplate = {
-  input: String.raw`E:\Fundamentos de Arquitetura de Software`,
-  output: String.raw`C:\Users\ricardo_outlier\Meu Drive\NeuronNotes\6. Materiais Brutos\2. Áreas\Arquitetura de Software`,
+  input: String.raw`E:\Programação\Arquitetura de Software\Roadmap Arquiteto de Software`,
+  output: String.raw`C:\Users\ricardo_outlier\NeuronNotes\6. Materiais Brutos\2. Áreas\Programação\Arquitetura de Software\Roadmap Arquiteto de Software`,
   force: true,
   properties: `---
 
 type: "[[Vídeo]]"
 
-enterprise: "[[desenvolvedor.io]]"
-
-author: "[[Eduardo Pires]]"
+author: "[[Renato Augusto]]"
 keywords:
 
   - "[[Arquitetura de Software]]"
+  - "[[roadmap]]"
 
-course: "[[fundamentos da arquititetura de software]]"
+course: "[[Roadmap Arquiteto de software]]"
 
 "url": "\${videoUrl}"
 ---

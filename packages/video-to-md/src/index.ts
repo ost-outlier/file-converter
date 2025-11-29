@@ -1,22 +1,10 @@
 import { promises as fs } from "fs";
 import * as path from "path";
 import { pathToFileURL } from "url";
-import type {
-  VideoToMarkdownOptions,
-  VideoToMarkdownTemplate,
-} from "./types";
+import type { VideoToMarkdownOptions, VideoToMarkdownTemplate } from "./types";
 import { templateConfig } from "./template";
 
-const VIDEO_EXTENSIONS = new Set([
-  ".mp4",
-  ".mov",
-  ".mkv",
-  ".avi",
-  ".wmv",
-  ".m4v",
-  ".webm",
-  ".flv",
-]);
+const VIDEO_EXTENSIONS = new Set([".mp4", ".mov", ".mkv", ".avi", ".wmv", ".m4v", ".webm", ".flv", ".ts"]);
 
 interface CliParseResult {
   inputDir?: string;
@@ -58,20 +46,14 @@ async function main() {
   const rootDir = path.resolve(parsed.inputDir);
   const options: VideoToMarkdownOptions = {
     ...parsed.options,
-    outputDir: parsed.options.outputDir
-      ? path.resolve(parsed.options.outputDir)
-      : parsed.options.outputDir,
+    outputDir: parsed.options.outputDir ? path.resolve(parsed.options.outputDir) : parsed.options.outputDir,
   };
 
   try {
     const stats = await convertDirectory(rootDir, options);
     printSummary(rootDir, options, stats);
   } catch (error) {
-    console.error(
-      `[erro] falha ao gerar notas: ${
-        error instanceof Error ? error.message : error
-      }`
-    );
+    console.error(`[erro] falha ao gerar notas: ${error instanceof Error ? error.message : error}`);
     process.exit(1);
   }
 }
@@ -136,10 +118,7 @@ function parseArgs(args: string[]): CliParseResult {
   return { inputDir, options };
 }
 
-function applyTemplateDefaults(
-  parsed: CliParseResult,
-  template: VideoToMarkdownTemplate
-): CliParseResult {
+function applyTemplateDefaults(parsed: CliParseResult, template: VideoToMarkdownTemplate): CliParseResult {
   if (!parsed.inputDir && !template.input) {
     return parsed;
   }
@@ -157,10 +136,7 @@ function applyTemplateDefaults(
   };
 }
 
-async function convertDirectory(
-  rootDir: string,
-  options: VideoToMarkdownOptions
-): Promise<ProcessStats> {
+async function convertDirectory(rootDir: string, options: VideoToMarkdownOptions): Promise<ProcessStats> {
   const rootStats = await fs.stat(rootDir);
 
   if (!rootStats.isDirectory()) {
@@ -221,15 +197,9 @@ function isVideoFile(filename: string): boolean {
 
 type NoteResult = "created" | "overwritten" | "skipped";
 
-async function createNote(
-  videoPath: string,
-  rootDir: string,
-  options: VideoToMarkdownOptions
-): Promise<NoteResult> {
+async function createNote(videoPath: string, rootDir: string, options: VideoToMarkdownOptions): Promise<NoteResult> {
   const videoDir = path.dirname(videoPath);
-  const targetDir = options.outputDir
-    ? path.join(options.outputDir, path.relative(rootDir, videoDir))
-    : videoDir;
+  const targetDir = options.outputDir ? path.join(options.outputDir, path.relative(rootDir, videoDir)) : videoDir;
 
   const videoName = path.parse(videoPath).name;
   const notePath = path.join(targetDir, `${videoName}.md`);
@@ -241,11 +211,7 @@ async function createNote(
     return "skipped";
   }
 
-  const noteContent = buildNoteContent(
-    videoName,
-    videoPath,
-    options.properties
-  );
+  const noteContent = buildNoteContent(videoName, videoPath, options.properties);
   await fs.writeFile(notePath, noteContent, "utf8");
 
   if (exists) {
@@ -266,11 +232,7 @@ async function fileExists(filePath: string): Promise<boolean> {
   }
 }
 
-function buildNoteContent(
-  title: string,
-  videoPath: string,
-  properties?: string
-): string {
+function buildNoteContent(title: string, videoPath: string, properties?: string): string {
   const videoUrl = pathToFileURL(videoPath).href;
   const baseContent = `# ${title}
 <video src="${videoUrl}" controls width="100%" height="auto">
@@ -281,9 +243,7 @@ function buildNoteContent(
     return baseContent;
   }
 
-  const formattedProperties = ensureTrailingNewline(
-    applyPropertiesTemplate(properties, videoUrl)
-  );
+  const formattedProperties = ensureTrailingNewline(applyPropertiesTemplate(properties, videoUrl));
 
   return `${formattedProperties}${baseContent}`;
 }
@@ -296,18 +256,10 @@ function ensureTrailingNewline(value: string): string {
   return value.endsWith("\n") ? value : `${value}\n`;
 }
 
-function printSummary(
-  rootDir: string,
-  options: VideoToMarkdownOptions,
-  stats: ProcessStats
-) {
+function printSummary(rootDir: string, options: VideoToMarkdownOptions, stats: ProcessStats) {
   console.log("\nResumo:");
   console.log(`  Pasta analisada: ${rootDir}`);
-  console.log(
-    `  Destino das notas: ${
-      options.outputDir ? options.outputDir : "mesma pasta dos videos"
-    }`
-  );
+  console.log(`  Destino das notas: ${options.outputDir ? options.outputDir : "mesma pasta dos videos"}`);
   console.log(`  Videos encontrados: ${stats.totalVideos}`);
   console.log(`  Notas criadas: ${stats.created}`);
   console.log(`  Notas atualizadas: ${stats.overwritten}`);
@@ -315,8 +267,6 @@ function printSummary(
 }
 
 main().catch((error) => {
-  console.error(
-    `[erro] falha inesperada: ${error instanceof Error ? error.message : error}`
-  );
+  console.error(`[erro] falha inesperada: ${error instanceof Error ? error.message : error}`);
   process.exit(1);
 });
