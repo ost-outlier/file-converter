@@ -235,8 +235,7 @@ async function fileExists(filePath: string): Promise<boolean> {
 function buildNoteContent(title: string, videoPath: string, properties?: string): string {
   const videoUrl = pathToFileURL(videoPath).href;
   const baseContent = `# ${title}
-<video src="${videoUrl}" controls width="100%" height="auto">
-</video>
+![Vídeo](${videoUrl})
 `;
 
   if (!properties) {
