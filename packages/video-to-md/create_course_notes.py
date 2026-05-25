@@ -56,6 +56,20 @@ def collect_resources_recursive(directory: Path) -> list:
     return resources
 
 
+def create_recursos_note(directory: Path, resources: list, vault_dir: Path, course_base: Path):
+    """Cria _recursos.md em pastas sem vídeo que tenham arquivos."""
+    rel = directory.relative_to(course_base)
+    note_path = vault_dir / rel / "_recursos.md"
+    note_path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines = [f"# Recursos — {directory.name}", "", "## Materiais"]
+    for r in sorted(resources):
+        lines.append(f"- [{r.name}]({file_uri(r)})")
+
+    note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"  📁 {note_path.relative_to(vault_dir)}")
+
+
 def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path):
     """Cria o arquivo .md para um vídeo no vault."""
     rel = video.relative_to(course_base)
@@ -107,7 +121,9 @@ def process_directory(directory: Path, vault_dir: Path, course_base: Path):
             process_directory(sub, vault_dir, course_base)
 
     else:
-        # Sem vídeos: apenas desce nos subdiretórios
+        # Sem vídeos: cria _recursos.md se houver arquivos, depois desce nos subdiretórios
+        if non_videos:
+            create_recursos_note(directory, non_videos, vault_dir, course_base)
         for sub in subdirs:
             process_directory(sub, vault_dir, course_base)
 
