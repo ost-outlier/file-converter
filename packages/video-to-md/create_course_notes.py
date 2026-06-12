@@ -64,9 +64,9 @@ def create_recursos_note(
     note_path = vault_dir / rel / "_recursos.md"
     note_path.parent.mkdir(parents=True, exist_ok=True)
 
-    lines = [f"# Recursos — {directory.name}", "", "## Materiais"]
+    lines = [f"# Recursos — {directory.name}", "", "## 📎 Materiais"]
     for r in sorted(resources):
-        lines.append(f"- [{r.name}]({file_uri(r)})")
+        lines.append(f"- [{r.name}]({mobile_uri(r)}) | [💻PC]({file_uri(r)})")
 
     note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"  📁 {note_path.relative_to(vault_dir)}")
@@ -81,6 +81,13 @@ def get_friendly_path(path: Path) -> str:
     return path.as_posix()
 
 
+def mobile_uri(path: Path) -> str:
+    """Converte o caminho amigável para URI http://127.0.0.1:8080/ com encoding correto."""
+    friendly = get_friendly_path(path)
+    encoded = urllib.parse.quote(friendly, safe="/:")
+    return f"http://127.0.0.1:8080/{encoded}"
+
+
 def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path):
     """Cria o arquivo .md para um vídeo no vault."""
     rel = video.relative_to(course_base)
@@ -91,12 +98,8 @@ def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path
     lines = [
         "---",
         f"video: {get_friendly_path(video)}",
+        "---",
     ]
-    if resources:
-        lines.append("materials:")
-        for r in sorted(resources):
-            lines.append(f"  - {get_friendly_path(r)}")
-    lines.append("---")
 
     # Conteúdo da nota
     lines += [
@@ -112,7 +115,7 @@ def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path
     if resources:
         lines += ["", "## 📎 Materiais"]
         for r in sorted(resources):
-            lines.append(f"- [{r.name}]({file_uri(r)})")
+            lines.append(f"- [{r.name}]({mobile_uri(r)}) | [💻PC]({file_uri(r)})")
 
     note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"  ✓  {note_path.relative_to(vault_dir)}")
