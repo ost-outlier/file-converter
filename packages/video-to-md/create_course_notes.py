@@ -18,6 +18,7 @@ from pathlib import Path
 
 VIDEO_EXTENSIONS = {".mp4", ".mkv", ".avi", ".mov", ".webm", ".m4v", ".flv", ".wmv"}
 
+DRIVE_ROOT = Path("/home/outlier/Drive")
 
 def is_video(path: Path) -> bool:
     return path.suffix.lower() in VIDEO_EXTENSIONS
@@ -73,13 +74,11 @@ def create_recursos_note(
 
 
 def get_friendly_path(path: Path) -> str:
-    """Retorna o caminho amigável a partir da pasta 'cursos' (case-insensitive)."""
-    parts = path.parts
-    for i, part in enumerate(parts):
-        if part.lower() == "cursos":
-            return "/".join(parts[i:])
-    return path.as_posix()
-
+    """Retorna o caminho relativo à raiz do Drive. Se estiver fora dela, retorna o caminho completo."""
+    try:
+        return path.relative_to(DRIVE_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 def mobile_uri(path: Path) -> str:
     """Converte o caminho amigável para URI http://127.0.0.1:8080/ com encoding correto."""
