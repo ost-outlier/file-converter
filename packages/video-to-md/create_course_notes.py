@@ -88,16 +88,84 @@ def mobile_uri(path: Path) -> str:
     return f"http://127.0.0.1:8080/{encoded}"
 
 
+def get_module_name(video: Path, course_base: Path):
+    """
+    Retorna o nome da pasta de primeira camada (módulo) em que o vídeo está,
+    ou None se o vídeo estiver diretamente na raiz do curso.
+    """
+    rel = video.relative_to(course_base)
+    if len(rel.parts) > 1:
+        return rel.parts[0]
+    return None
+
+
+def create_course_note(course_dir: Path, vault_dir: Path):
+    """Cria a nota raiz do curso (topo da cadeia addTime), se ainda não existir."""
+    note_path = vault_dir / f"{course_dir.name}.md"
+    if note_path.exists():
+        return
+    note_path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines = [
+        "---",
+        'ordering: "[[nome]]"',
+        "sorting-spec: |-",
+        f"  {course_dir.name}",
+        "  %",
+        "---",
+        f"# {course_dir.name}",
+        "",
+        "```dataviewjs",
+        'await dv.view("scripts/utils/totalTime");',
+        "```",
+    ]
+    note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"  📘 {note_path.relative_to(vault_dir)}")
+
+
+def create_module_note(module_dir: Path, vault_dir: Path, course_dir: Path):
+    """Cria a nota raiz do módulo (primeira camada de pastas), com addTime pro curso."""
+    note_path = vault_dir / module_dir.name / f"{module_dir.name}.md"
+    if note_path.exists():
+        return
+    note_path.parent.mkdir(parents=True, exist_ok=True)
+
+    lines = [
+        "---",
+        "addTime:",
+        f'  - "[[{course_dir.name}]]"',
+        "type:",
+        '  - "[[Módulo de Curso]]"',
+        'ordering: "[[nome]]"',
+        "sorting-spec: |-",
+        f"  {module_dir.name}",
+        "  %",
+        "---",
+        f"# {module_dir.name}",
+        "",
+        "```dataviewjs",
+        'await dv.view("scripts/utils/totalTime");',
+        "```",
+    ]
+    note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    print(f"  📗 {note_path.relative_to(vault_dir)}")
+
+
 def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path):
     """Cria o arquivo .md para um vídeo no vault."""
     rel = video.relative_to(course_base)
     note_path = vault_dir / rel.with_suffix(".md")
     note_path.parent.mkdir(parents=True, exist_ok=True)
 
+    module_name = get_module_name(video, course_base)
+    add_time_target = module_name if module_name else course_base.name
+
     # Propriedades da nota (YAML frontmatter)
     lines = [
         "---",
         f"video: {get_friendly_path(video)}",
+        "theBox:",
+        f'  - "[[{add_time_target}]]"',
         "---",
     ]
 
@@ -117,6 +185,14 @@ def create_note(video: Path, resources: list, vault_dir: Path, course_base: Path
         for r in sorted(resources):
             lines.append(f"- [{r.name}]({mobile_uri(r)}) | [💻PC]({file_uri(r)})")
 
+    lines += [
+        "",
+        "# Anotações",
+        "",
+        "# Tempo Investido:",
+        "```simple-time-tracker",
+        "```",
+    ]
     note_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     print(f"  ✓  {note_path.relative_to(vault_dir)}")
 
@@ -173,6 +249,14 @@ def main():
     print(f"Curso : {course_dir}")
     print(f"Vault : {vault_dir}")
     print()
+
+    # Nota raiz do curso (topo da cadeia addTime)
+    create_course_note(course_dir, vault_dir)
+
+    # Notas de módulo (primeira camada de pastas com vídeo em algum lugar dentro)
+    for item in sorted(course_dir.iterdir()):
+        if item.is_dir() and has_video_recursive(item):
+            create_module_note(item, vault_dir, course_dir)
 
     process_directory(course_dir, vault_dir, course_dir)
 

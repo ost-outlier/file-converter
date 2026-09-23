@@ -8,8 +8,8 @@ Regras claras então. O algoritmo fica assim:
 
 ```bash
 python3 create_course_notes.py \
-  "/home/outlier/Drive/Curso" \
-  "/home/outlier/Documentos/NeuronNotes/Apeiron/Courses/Pastas de Cursos/Curso"
+  "/home/outlier/Drive/immersion" \
+  "/home/outlier/Documentos/NeuronNotes/Apeiron/Immersion"
 ```
 
 ---
